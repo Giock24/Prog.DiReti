@@ -1,5 +1,5 @@
 #!/bin/bash
 
-rm client/clientFile*
-rm server/serverFile*
+rm client/myFiles/clientFile*
+rm server/serverStorage/serverFile*
 

@@ -1,7 +1,7 @@
 import os
 import subprocess
-
-from socket import *
+import sys
+import socket as sk
 
 print('Creation of all files')
 
@@ -11,10 +11,36 @@ pathabs = os.getcwd();
 pathScript = ""+pathabs[0:-6]+"createFiles.sh"
 subprocess.call([pathScript])
 
-clientPort = 85
+clientSocket = sk.socket(sk.AF_INET, sk.SOCK_DGRAM)
 
-clientSocket = socket(AF_INET, SOCK_DGRAM)
+server_address = ('localhost', 10000)
+clientSocket.bind(server_address)
 
-clientSocket.bind('',serverPort)
+while True:
+    
+    print("Commands available : 'ls', 'upload', 'download', 'Exit'\n")
+    command = input("Digit a command : ")
+    
+    if command == "ls" or command == "upload" or command == "download":
+    
+        try:
+            print("sa")
+        
+        except:
+            print("Something gone wrong")
+        finally:
+            clientSocket.close()
+    
+    elif command == "Exit":
+        print("\n\r Exit with success")
+        
+        clientSocket.close()
+        sys.exit()
+    else:
+        print("\n Invalid command try Again!")
+    
+    # connectionSocket, addr = clientSocket.connect('127.0.0.1')
+    
+    
 
 

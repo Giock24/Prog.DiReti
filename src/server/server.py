@@ -11,7 +11,7 @@ serverPort = 10000
 serverSocket = sk.socket(sk.AF_INET, sk.SOCK_DGRAM);
 
 # nel primo paramentro di entrata presumo come IP : 127.0.0.1
-serverSocket.bind('',serverPort)
+serverSocket.bind('localhost',serverPort)
 
 print('The server is Online on port: ', serverPort)
 

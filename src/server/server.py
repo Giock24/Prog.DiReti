@@ -1,5 +1,5 @@
 import os
-import sys
+import time
 import socket as sk
 
 # this method return a list of all file that are present on Server
@@ -10,7 +10,6 @@ def listingFiles():
 #serverPort = 10000
 serverSocket = sk.socket(sk.AF_INET, sk.SOCK_DGRAM);
 
-# nel primo paramentro di entrata presumo come IP : 127.0.0.1
 server_address = ('localhost', 10000)
 serverSocket.bind(server_address)
 
@@ -31,8 +30,6 @@ while True:
     try:
         
         if len(command)>0:
-            
-            
             
             if command == "ls":
                 lista = listingFiles()
@@ -68,16 +65,38 @@ while True:
                 
                 responseServer='HTTP/1.1 200 OK Uploaded_File_Done'
                 sent = serverSocket.sendto(responseServer.encode(), addr)
+                
+            elif command == "download":
+                
+                print("Waiting the choosing of file to download...")
+                data = serverSocket.recv(4096)
+                file = data.decode('utf8')
+                
+                pathFolder = os.path.join(os.getcwd(),"serverStorage")
+                pathFolder = os.path.join(pathFolder, ""+file+"")
+                
+                if os.path.exists(pathFolder):
+                    
+                    responseServer='HTTP/1.1 200 OK File_Exist'
+                    sent = serverSocket.sendto(responseServer.encode(), addr)
+                    
+                    file = open(""+pathFolder+"",'r')
+                    sent = serverSocket.sendto(file.read().__str__().encode('utf8'), addr)
+                    time.sleep(2)
+                    
+                    responseServer='HTTP/1.1 200 OK File_Exist'
+                    sent = serverSocket.sendto(responseServer.encode(), addr)
+                    
+                    
+                else:
+                    time.sleep(2)
+                    print("41487")
+                    responseServer='HTTP/1.1 404 Error File_Not_Found'
+                    sent = serverSocket.sendto(responseServer.encode(), addr)
             
         else:
             print("\n\r The message received is empty")
         
     except:
         print("\n\r Something gone wrong")
-    
-    
-serverSocket.close()
-sys.exit()
-    
-    
-    
+        

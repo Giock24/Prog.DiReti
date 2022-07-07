@@ -10,8 +10,11 @@ def listingFiles():
     return lista
 
 def itsOK(string):
-    if string[9:12] == "200":
+    statusCode = string[9:12]
+    if statusCode == "200":
         print("The operation had succeed")
+    elif statusCode == "404":
+        print("404 File Not Found")
 
 commands=['ls','upload','download','exit']
 serverFiles=[]
@@ -45,7 +48,6 @@ while True:
             
                 print('Waiting to receive from')
                 data, server = clientSocket.recvfrom(4096)
-                
                 length = int(data.decode('utf8'))
                 
                 for i in range(length):
@@ -102,6 +104,37 @@ while True:
                 
                 responseServer = data.decode('utf8')
                 itsOK(responseServer)
+                
+            elif command == "download":
+                
+                sent = clientSocket.sendto(command.__str__().encode('utf8'), server_address)
+                
+                print('Choose a file to download : %s' %serverFiles.__str__())
+                fileToDownload = input("Digit the name of file: ")
+                
+                sent = clientSocket.sendto(fileToDownload.encode('utf8'), server_address)
+                
+                print('Waiting checking of exist file')
+                data = clientSocket.recv(4096)
+                
+                responseServer = data.decode('utf8')
+                itsOK(responseServer)
+                
+                if responseServer[9:12] == "200":
+                    
+                    pathFolder = os.path.join(os.getcwd(), "download")
+                    pathFolder = os.path.join(pathFolder, ""+fileToDownload+"")
+                    
+                    file = open(""+pathFolder+"",'w')
+                    
+                    data = clientSocket.recv(4096)
+                    file.write(data.decode('utf8'))
+                    file.close()
+                    
+                    data = clientSocket.recv(4096)
+                    responseServer = data.decode('utf8')
+                    itsOK(responseServer)
+                    
         
         except Exception as Info:
             print(Info)
@@ -117,9 +150,4 @@ while True:
         sys.exit()
     else:
         print("Invalid command try Again!\n")
-    
-    # connectionSocket, addr = clientSocket.connect('127.0.0.1')
-    
-    
-
-
+        

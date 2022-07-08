@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import socket as sk
 
@@ -34,10 +35,7 @@ while True:
             if command == "ls":
                 lista = listingFiles()
                 
-                sent = serverSocket.sendto(len(lista).__str__().encode('utf8'), addr)
-                
-                for file in lista:
-                    sent = serverSocket.sendto(file.encode('utf8'), addr)
+                sent = serverSocket.sendto(lista.__str__().encode('utf8'), addr)
                 
                 responseServer='HTTP/1.1 200 OK List_Files_Sended'
                 sent = serverSocket.sendto(responseServer.encode(), addr)
@@ -68,6 +66,9 @@ while True:
                 
             elif command == "download":
                 
+                lista = listingFiles()
+                sent = serverSocket.sendto(lista.__str__().encode('utf8'), addr)
+                
                 print("Waiting the choosing of file to download...")
                 data = serverSocket.recv(4096)
                 file = data.decode('utf8')
@@ -90,13 +91,18 @@ while True:
                     
                 else:
                     time.sleep(2)
-                    print("41487")
                     responseServer='HTTP/1.1 404 Error File_Not_Found'
                     sent = serverSocket.sendto(responseServer.encode(), addr)
             
         else:
             print("\n\r The message received is empty")
         
-    except:
-        print("\n\r Something gone wrong")
+    except Exception as e:
+        responseServer = 'HTTP/1.1 500 Internal_Server_Error'
+        sent = serverSocket.sendto(responseServer.encode('utf8'), addr)
+        
+        print(e)
+        
+        serverSocket.close()
+        sys.exit()
         

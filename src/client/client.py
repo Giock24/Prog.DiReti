@@ -39,20 +39,43 @@ server_address = ('localhost', 10000)
 
 while True:
     
+    fileToUpload=""
+    
     while True:
         print('Commands available : %s' % (commands.__str__()))
         command = input("Digit a command : ")
         
         if commands.__contains__(command):
-            break
+            
+            if command == "upload":
+                
+                while True:
+                    lista = listingFiles()
+                        
+                    print('You have these files : %s' % lista.__str__())
+                    print('If you want to go back, digit "back", otherwise')
+                    fileToUpload = input("Digit a file to upload : ")
+                    
+                        
+                    if lista.__contains__(fileToUpload):
+                        break
+                    elif fileToUpload == "back":
+                        break
+                    else:
+                        print("This file doesn't exists! Try Again")
+                        print("")
+                        
+            if fileToUpload != "back":    
+                break
         else:
             print("Invalid command try Again!\n")
     
     
     try:
+        
+        sent = clientSocket.sendto(command.__str__().encode('utf8'), server_address)
             
         if command == "ls":
-            sent = clientSocket.sendto(command.__str__().encode('utf8'), server_address)
             
             print('Waiting to receive from')
             data, server = clientSocket.recvfrom(4096)
@@ -70,20 +93,6 @@ while True:
             print('Files that are present in the Server: %s \n' % (serverFiles.__str__()) )
                 
         elif command == "upload":
-            fileToUpload=""
-                
-            while True:
-                lista = listingFiles()
-                    
-                print('You have these files : %s' % lista.__str__())
-                fileToUpload = input("Digit a file to upload : ")
-                    
-                if lista.__contains__(fileToUpload):
-                    break
-                else:
-                    print("This file doesn't exists! Try Again")
-                        
-            sent = clientSocket.sendto(command.__str__().encode('utf8'), server_address)
                 
             time.sleep(2)
             print('Waiting for OK')
@@ -111,8 +120,6 @@ while True:
             itsOK(responseServer, clientSocket)
                 
         elif command == "download":
-                
-            sent = clientSocket.sendto(command.__str__().encode('utf8'), server_address)
             
             data, server = clientSocket.recvfrom(4096)
             serverFiles = data.decode('utf8')

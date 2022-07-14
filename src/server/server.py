@@ -85,7 +85,7 @@ while True:
                     sent = serverSocket.sendto(file.read().__str__().encode('utf8'), addr)
                     time.sleep(2)
                     
-                    responseServer='HTTP/1.1 200 OK File_Exist'
+                    responseServer='HTTP/1.1 200 OK File_Downloaded'
                     sent = serverSocket.sendto(responseServer.encode(), addr)
                     
                     

@@ -1,15 +1,15 @@
 #!/bin/bash
 cd ../
 
-if [[ `ls client/myFiles/ | wc -l` -gt 0 ]]; then
+if [[ `ls client/myFiles/*File* | wc -l` -gt 0 ]]; then
 	rm client/myFiles/*File*
-fi
+fi 2> /dev/null
 
-if [[ `ls client/download/ | wc -l` -gt 0 ]]; then
+if [[ `ls client/download/*File* | wc -l` -gt 0 ]]; then
 	rm client/download/*File*
-fi
+fi 2> /dev/null
 
-if [[ `ls server/serverStorage/ | wc -l` -gt 0 ]]; then
+if [[ `ls server/serverStorage/*File* | wc -l` -gt 0 ]]; then
 	rm server/serverStorage/*File*
-fi 
+fi 2> /dev/null
 

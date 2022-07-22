@@ -65,8 +65,9 @@ while True:
                         print("This file doesn't exists! Try Again")
                         print("")
                         
-            if fileToUpload != "back":    
+            elif command != "upload":
                 break
+            
         else:
             print("Invalid command try Again!\n")
     

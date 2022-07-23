@@ -47,10 +47,11 @@ while True:
         
         if commands.__contains__(command):
             
+            lista = listingFiles()
+            
             if command == "upload":
                 
                 while True:
-                    lista = listingFiles()
                         
                     print('You have these files : %s' % lista.__str__())
                     print('If you want to go back, digit "back", otherwise')
@@ -68,6 +69,9 @@ while True:
             elif command != "upload":
                 break
             
+            if lista.__contains__(fileToUpload):
+                break
+
         else:
             print("Invalid command try Again!\n")
     
